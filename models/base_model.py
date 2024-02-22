@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Defines the BaseModel class."""
+"""This module defines a base class for all models in our hbnb clone"""
 import models
 from uuid import uuid4
 from datetime import datetime
@@ -67,4 +67,4 @@ class BaseModel:
         """Return the print/str representation of the BaseModel instance."""
         d = self.__dict__.copy()
         d.pop("_sa_instance_state", None)
-        return "[{}] ({}) {}".format(type(self).__name__, self.id, d)
+        return "[{}] ({}) {}".format(type(self).__name__, self.id, di)

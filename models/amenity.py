@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Defines the Amenity class."""
+""" State Module for HBNB project"""
 from models.base_model import Base
 from models.base_model import BaseModel
 from sqlalchemy import Column
