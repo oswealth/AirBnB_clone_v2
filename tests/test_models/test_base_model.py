@@ -81,9 +81,9 @@ class test_basemodel(unittest.TestCase):
         # Tests if it's a dictionary
         self.assertIsInstance(self.value().to_dict(), dict)
         # Tests if to_dict contains accurate keys
-        self.assertIn('id', self.value().to_dict())
-        self.assertIn('created_at', self.value().to_dict())
-        self.assertIn('updated_at', self.value().to_dict())
+	expected_keys = ['id', 'created_at', 'updated_at']
+	actual_keys = self.value().to_dict().keys()
+	self.assertCountEqual(expected_keys, actual_keys
         # Tests if to_dict contains added attributes
         mdl = self.value()
         mdl.firstname = 'Celestine'
@@ -125,14 +125,18 @@ class test_basemodel(unittest.TestCase):
                 }
             )
         # Tests to_dict output contradiction
-        mdl_d = self.value()
-        self.assertIn('__class__', self.value().to_dict())
-        self.assertNotIn('__class__', self.value().__dict__)
-        self.assertNotEqual(mdl_d.to_dict(), mdl_d.__dict__)
-        self.assertNotEqual(
-            mdl_d.to_dict()['__class__'],
-            mdl_d.__class__
-        )
+	datetime_now = datetime.today()
+	mdl = self.value()
+	mdl.id = '012345'
+	mdl.created_at = mdl.updated_at = datetime_now
+	to_dict = {
+		'id': '012345',
+		'__class__': mdl.__class__.__name__,
+		'created_at': datetime_now.isoformat(),
+		'updated_at': datetime_now.isoformat()
+	}
+	self.assertDictEqual(mdl.to_dict(), to_dict)
+
         # Tests to_dict with arg
         with self.assertRaises(TypeError):
             self.value().to_dict(None)
