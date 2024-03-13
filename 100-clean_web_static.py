@@ -12,15 +12,22 @@ def do_clean(number=0):
         number (int): The number of archives to keep.
 
     """
-    number = 1 if int(number) == 0 else int(number)
+    number = int(number)
 
-    archives = sorted(os.listdir("versions"))
-    [archives.pop() for i in range(number)]
+    if number < 1:
+        number = 1  # Keep at least one archive
+
+    # Local cleanup
+    local_archives = sorted(os.listdir("versions"))
+    local_archives_to_remove = local_archives[:-number]
     with lcd("versions"):
-        [local("rm ./{}".format(a)) for a in archives]
+        for archive in local_archives_to_remove:
+            local("rm ./{}".format(archive))
 
+    # Remote cleanup
     with cd("/data/web_static/releases"):
-        archives = run("ls -tr").split()
-        archives = [a for a in archives if "web_static_" in a]
-        [archives.pop() for i in range(number)]
-        [run("rm -rf ./{}".format(a)) for a in archives]
+        remote_archives = run("ls -tr").split()
+        remote_archives = [a for a in remote_archives if "web_static_" in a]
+        remote_archives_to_remove = remote_archives[:-number]
+        for archive in remote_archives_to_remove:
+            run("rm -rf ./{}".format(archive))
